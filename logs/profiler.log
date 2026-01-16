@@ -1,3 +1,0 @@
-2026-01-15 16:54:39,474 - src.audio.audio_capture - INFO - Found monitor device: RDPSink.monitor
-2026-01-15 16:54:39,475 - src.audio.audio_capture - INFO - Starting audio capture on device: None
-2026-01-15 16:54:39,475 - src.audio.audio_capture - ERROR - Failed to start recording: Error querying device -1

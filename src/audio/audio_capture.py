@@ -204,6 +204,7 @@ class AudioCapture:
 
         # Use device's default sample rate if ours isn't supported
         device_sample_rate = int(device_info['default_samplerate'])
+        actual_sample_rate = self.sample_rate
 
         # Try the requested sample rate first, fall back to device default
         logger.info(f"Device has {device_channels} channels, default sample rate: {device_sample_rate}")
