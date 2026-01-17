@@ -723,6 +723,12 @@ class LinguisticAnalyzer:
         if "fake_niceness" in markers:
             # Saccharine politeness is classic politician behavior
             politician_boost += 0.2
+        if "false_empathy" in markers:
+            # "I feel your pain" from millionaires = pure politician
+            politician_boost += 0.25
+        if "stats_as_authority" in markers:
+            # Cherry-picked stats to seem authoritative
+            politician_boost += 0.1
 
         politician_score = min(politician_base + politician_boost + (deception_score * 0.3), 1.0)
 

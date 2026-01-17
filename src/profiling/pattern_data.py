@@ -1026,6 +1026,56 @@ DECEPTION_PATTERNS = {
         "weight": 1.2,
         "note": "Excessive niceness often masks disagreement or contempt",
     },
+    "false_empathy": {
+        "description": "Performative concern from people who don't actually struggle",
+        "phrases": [
+            # Fake solidarity openers
+            "you're not alone", "you are not alone", "we're all in this",
+            "i feel your pain", "i understand what you're going through",
+            "i know how hard it is", "i know it's tough",
+            "are you struggling", "are you having a hard time",
+            "if you're struggling", "if you're having trouble",
+            # Performative concern
+            "this keeps me up at night", "this is what i think about",
+            "i worry about", "i'm concerned about", "i'm fighting for you",
+            "i'm on your side", "i stand with you", "i'm here for you",
+            "that's who i'm fighting for", "that's why i'm here",
+            # Victimhood framing for others
+            "through no fault of their own", "whose only crime was",
+            "whose only sin was", "no fault of your own",
+            "didn't ask for this", "didn't choose this",
+            # False "we're the same" framing
+            "people like you", "families like yours", "that's who we're talking about",
+            "these are real people", "these are your neighbors",
+            "could be you", "could be your family", "could be anyone",
+            # Rhetorical concern questions
+            "how are people supposed to", "what are families supposed to do",
+            "how can anyone afford", "who can afford",
+        ],
+        "weight": 1.4,
+        "note": "Millionaires expressing 'concern' for struggling people is performance",
+    },
+    "stats_as_authority": {
+        "description": "Using statistics to seem authoritative while manipulating",
+        "phrases": [
+            # Vague big numbers
+            "millions of people", "millions of americans", "millions of families",
+            "thousands of people", "hundreds of thousands",
+            # Survey/study appeals
+            "studies show", "research shows", "a recent survey",
+            "polls indicate", "data shows", "the numbers show",
+            "according to studies", "experts say",
+            # Scary fractions
+            "one in four", "one in five", "one in three", "one in ten",
+            "four in ten", "three in ten", "nearly half",
+            "more than half", "the majority of",
+            # Vague percentages
+            "nearly 40", "almost 50", "roughly 60", "about 70",
+            "more than 80", "over 90",
+        ],
+        "weight": 1.0,
+        "note": "Stats without context are often cherry-picked or misleading",
+    },
     "false_relatability": {
         "description": "Wealthy/powerful people pretending to be regular folks",
         "phrases": [
