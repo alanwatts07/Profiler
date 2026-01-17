@@ -175,24 +175,47 @@ class RealtimeProfiler:
         try:
             client = anthropic.Anthropic(api_key=api_key)
 
-            prompt = f"""Analyze this person's speech patterns and provide insights about their personality, communication style, and honesty markers.
+            # Get deception markers if available for context
+            deception_context = ""
+            if speaker in self.speaker_profiles:
+                prof = self.speaker_profiles[speaker]
+                pol = prof.get("politician_score", 0)
+                dec = prof.get("deception_score", 0)
+                if pol > 0.2 or dec > 0.2:
+                    deception_context = f"\n\nNOTE: Our linguistic analysis detected politician_score={pol:.0%}, deception_score={dec:.0%}"
+
+            prompt = f"""Analyze this person's speech patterns and provide insights about their personality, communication style, and DECEPTION MARKERS.
 
 Speaker: {speaker}
 Text sample ({len(text.split())} words):
 "{text}"
+{deception_context}
+
+DECEPTION PATTERNS TO LOOK FOR:
+1. FALSE EMPATHY - Rich/powerful people saying "I feel your pain", "you're not alone", "I know how hard it is" (performative concern)
+2. FALSE RELATABILITY - "working families", "kitchen table", "putting food on the table" (millionaires pretending to be regular folks)
+3. BLAME SHIFTING - Mentioning other politicians/parties to deflect ("under [opponent]", "the previous administration")
+4. HEDGING - "I believe", "to my knowledge", "I don't recall" (avoiding commitment)
+5. NON-ANSWERS - "That's a great question", "Let me be clear" then not being clear
+6. WEASEL WORDS - "Some people say", "Many believe", "Studies show" (vague attribution)
+7. STATS AS MANIPULATION - Cherry-picked statistics to seem authoritative
+8. FAKE NICENESS - "With all due respect", "My good friend" (saccharine politeness)
+9. FUTURE FAKING - "We're looking into it", "Very soon" (vague promises)
+10. EMOTIONAL MANIPULATION - "Think of the children", "Our freedom" (appeals over substance)
 
 Based on this speech sample, provide a JSON response with:
 {{
-    "personality_summary": "2-3 sentence summary of their likely personality traits",
-    "communication_style": "How they prefer to communicate (direct/indirect, formal/casual, etc.)",
-    "likely_values": ["list", "of", "3-5", "core values"],
-    "how_to_persuade": "Best approach to influence or persuade this person",
-    "rapport_tip": "One specific tip to build rapport with them right now",
-    "honesty_assessment": "honest/evasive/uncertain - based on language patterns like hedging, distancing, non-answers, excessive qualifiers",
-    "deception_notes": "Any specific phrases or patterns that suggest evasion, spin, or rehearsed speech (or 'none detected' if speech seems genuine)"
+    "personality_summary": "2-3 sentence summary of their personality",
+    "communication_style": "direct/indirect, formal/casual, etc.",
+    "likely_values": ["3-5", "core", "values"],
+    "how_to_persuade": "Best approach to influence this person",
+    "rapport_tip": "One specific tip to build rapport right now",
+    "honesty_assessment": "honest/evasive/manipulative - BE HARSH, call out BS",
+    "deception_detected": ["list", "specific", "deception", "patterns", "found"],
+    "specific_red_flags": "Quote specific phrases that are manipulative or deceptive"
 }}
 
-Look for: hedging language, passive voice to avoid responsibility, non-answers, weasel words, blame-shifting, future-faking promises, tautologies, excessive certainty claims like 'believe me' or 'trust me'.
+BE CRITICAL. If this sounds like a politician pandering, SAY SO. If they're using false empathy or relatability, CALL IT OUT.
 
 Respond ONLY with the JSON object, no other text."""
 
@@ -341,16 +364,25 @@ Respond ONLY with the JSON object, no other text."""
                     profile["need"] = dominant_need
 
                 # Track deception/politician scores (smoothed average)
-                if hasattr(analysis, 'politician_score') and analysis.politician_score > 0:
+                pol_score = getattr(analysis, 'politician_score', 0)
+                dec_score = getattr(analysis, 'deception_score', 0)
+                dec_markers = getattr(analysis, 'deception_markers', {})
+
+                if pol_score > 0 or dec_score > 0:
+                    print(f"[Overlay] Deception: {dec_score:.2f} | Politician: {pol_score:.2f}")
+                    if dec_markers:
+                        print(f"[Overlay] Markers: {list(dec_markers.keys())}")
+
+                if pol_score > 0:
                     old_pol = profile.get("politician_score", 0)
-                    profile["politician_score"] = old_pol * 0.7 + analysis.politician_score * 0.3
+                    profile["politician_score"] = old_pol * 0.7 + pol_score * 0.3
                     result["politician_score"] = profile["politician_score"]
-                if hasattr(analysis, 'deception_score') and analysis.deception_score > 0:
+                if dec_score > 0:
                     old_dec = profile.get("deception_score", 0)
-                    profile["deception_score"] = old_dec * 0.7 + analysis.deception_score * 0.3
+                    profile["deception_score"] = old_dec * 0.7 + dec_score * 0.3
                     result["deception_score"] = profile["deception_score"]
-                if hasattr(analysis, 'deception_markers') and analysis.deception_markers:
-                    result["deception_markers"] = analysis.deception_markers
+                if dec_markers:
+                    result["deception_markers"] = dec_markers
 
                 # Generate tip
                 tips = []
