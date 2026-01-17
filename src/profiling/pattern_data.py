@@ -997,6 +997,61 @@ DECEPTION_PATTERNS = {
         ],
         "weight": 1.5,
     },
+    "fake_niceness": {
+        "description": "Saccharine, performative politeness masking true intent",
+        "phrases": [
+            # Condescending politeness
+            "with all due respect", "i appreciate you saying that",
+            "that's a great question", "i'm glad you asked",
+            "thank you for that question", "i hear you",
+            "i understand your concern", "i appreciate your perspective",
+            "that's a fair point", "you raise a good point",
+            # Dismissive niceness
+            "bless your heart", "i'm sure you mean well",
+            "i appreciate your passion", "i admire your enthusiasm",
+            "that's certainly one way to look at it", "interesting perspective",
+            # Passive aggressive nice
+            "no offense but", "with respect", "i don't mean to be rude",
+            "not to be negative", "i hate to say this but",
+            "i'm just being honest", "just saying", "just my opinion",
+            # Saccharine overload
+            "wonderful question", "fantastic point", "absolutely fantastic",
+            "couldn't agree more", "you're absolutely right",
+            "so glad you brought that up", "love that question",
+            # Political niceness
+            "my good friend", "my colleague", "the distinguished",
+            "the honorable", "my esteemed colleague", "dear friend",
+            "i have great respect for", "i deeply respect",
+        ],
+        "weight": 1.2,
+        "note": "Excessive niceness often masks disagreement or contempt",
+    },
+    "false_relatability": {
+        "description": "Wealthy/powerful people pretending to be regular folks",
+        "phrases": [
+            # "I'm just like you" pandering
+            "working families", "working class", "middle class families",
+            "hardworking americans", "ordinary americans", "regular people",
+            "people like you and me", "folks like us", "average american",
+            "main street", "kitchen table", "around the dinner table",
+            "paycheck to paycheck", "struggling families", "everyday americans",
+            # False humility / folksy act
+            "i grew up poor", "i know what it's like", "i've been there",
+            "i understand your struggles", "i feel your pain", "just like you",
+            "i'm one of you", "i came from nothing", "pulled myself up",
+            "my father was a", "my mother worked", "humble beginnings",
+            # Populist pandering
+            "the forgotten men and women", "silent majority", "real america",
+            "heartland", "small town values", "faith and family",
+            "god-fearing", "salt of the earth", "backbone of america",
+            # Economic pandering
+            "put food on the table", "make ends meet", "gas prices",
+            "grocery prices", "at the pump", "heating bills",
+            "your hard-earned money", "your tax dollars", "working people",
+        ],
+        "weight": 1.4,
+        "note": "When millionaires talk like this, it's performance not reality",
+    },
 }
 
 # Politician-specific speech patterns

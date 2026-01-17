@@ -715,6 +715,14 @@ class LinguisticAnalyzer:
             politician_boost += 0.15
         if "future_faking" in markers:
             politician_boost += 0.1
+        if "false_relatability" in markers:
+            # Big boost - rich people pretending to be regular folks is peak politician
+            politician_boost += 0.25
+        if "emotional_manipulation" in markers:
+            politician_boost += 0.1
+        if "fake_niceness" in markers:
+            # Saccharine politeness is classic politician behavior
+            politician_boost += 0.2
 
         politician_score = min(politician_base + politician_boost + (deception_score * 0.3), 1.0)
 
