@@ -562,6 +562,9 @@ class OverlayWindow:
         self._user_x = None
         self._user_y = None
 
+        # Track if we're closing
+        self._closing = False
+
         # Make draggable
         self.root.bind('<Button-1>', self._start_drag)
         self.root.bind('<B1-Motion>', self._drag)
@@ -843,8 +846,9 @@ class OverlayWindow:
                 self.personality_label.config(text="")
                 self.persuade_label.config(text="")
 
-        # Schedule next update
-        self.root.after(500, self._update)
+        # Schedule next update (unless closing)
+        if not self._closing:
+            self.root.after(500, self._update)
 
     def run(self):
         """Run the overlay."""
@@ -854,8 +858,27 @@ class OverlayWindow:
 
     def close(self):
         """Close the overlay."""
+        print("[Overlay] Closing...")
+
+        # Stop the update loop
+        self._closing = True
+
+        # Stop the profiler first
         self.profiler.stop()
-        self.root.destroy()
+
+        # Give processing thread time to finish
+        if hasattr(self.profiler, 'process_thread') and self.profiler.process_thread.is_alive():
+            print("[Overlay] Waiting for processing thread...")
+            self.profiler.process_thread.join(timeout=2.0)
+
+        # Destroy the window
+        try:
+            self.root.quit()
+            self.root.destroy()
+        except Exception:
+            pass
+
+        print("[Overlay] Closed.")
 
 
 def run_overlay(device: int):
