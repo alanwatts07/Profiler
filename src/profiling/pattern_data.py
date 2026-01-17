@@ -858,6 +858,178 @@ SPEECH_PATTERNS = {
 # Influence & Persuasion Patterns (from The Ellipsis Manual)
 # =============================================================================
 
+# =============================================================================
+# Deception & Political Doublespeak Patterns
+# Based on research on linguistic markers of deception and evasion
+# =============================================================================
+
+DECEPTION_PATTERNS = {
+    "hedging": {
+        "description": "Avoiding commitment to statements",
+        "keywords": [
+            "believe", "think", "suppose", "guess", "assume", "perhaps",
+            "possibly", "probably", "might", "could", "may", "seems",
+        ],
+        "phrases": [
+            "i believe", "i think", "to my knowledge", "as far as i know",
+            "i don't recall", "i don't remember", "not to my knowledge",
+            "i'm not aware", "i can't say for certain", "to the best of my recollection",
+            "i have no memory of", "it's possible", "it's conceivable",
+            "at this point in time", "at this juncture",
+        ],
+        "weight": 1.5,
+    },
+    "distancing": {
+        "description": "Creating psychological distance from statements",
+        "keywords": [
+            "that", "those", "the", "one", "someone", "something",
+        ],
+        "phrases": [
+            "that person", "that individual", "the situation", "those people",
+            "one might say", "some would argue", "it has been said",
+            "mistakes were made", "actions were taken", "decisions were made",
+            "it was determined", "the decision was made", "it happened",
+            "things occurred", "events transpired",
+        ],
+        "weight": 1.5,
+        "note": "Passive voice and nominalization to obscure agency",
+    },
+    "non_answers": {
+        "description": "Appearing to answer without actually answering",
+        "phrases": [
+            "that's a great question", "i'm glad you asked", "let me be clear",
+            "what i can tell you is", "what i will say is", "look",
+            "the fact of the matter is", "the reality is", "here's the thing",
+            "at the end of the day", "when all is said and done",
+            "the bottom line is", "in terms of", "with respect to",
+            "as it relates to", "moving forward", "going forward",
+        ],
+        "weight": 1.2,
+    },
+    "weasel_words": {
+        "description": "Vague attributions and unverifiable claims",
+        "phrases": [
+            "some people say", "many believe", "it's been said",
+            "sources indicate", "reports suggest", "experts claim",
+            "studies show", "research indicates", "they say",
+            "people are saying", "i've heard", "there are those who",
+            "some would argue", "critics say", "supporters believe",
+            "many people", "a lot of people", "everybody knows",
+            "nobody thinks", "most people agree",
+        ],
+        "weight": 1.3,
+    },
+    "false_dichotomy": {
+        "description": "Presenting only two options when more exist",
+        "phrases": [
+            "either you're with us or against us", "you're either for or against",
+            "there are only two choices", "it's simple", "it's black and white",
+            "you can either", "the only options are", "there's no middle ground",
+            "pick a side", "which side are you on",
+        ],
+        "weight": 1.4,
+    },
+    "emotional_manipulation": {
+        "description": "Appeals to emotion over substance",
+        "phrases": [
+            "think of the children", "our brave", "hard-working families",
+            "the american people", "real americans", "ordinary people",
+            "common sense", "kitchen table issues", "main street",
+            "taxpayer dollars", "your tax dollars", "our freedom",
+            "our way of life", "under attack", "fighting for",
+            "standing up for", "we cannot allow", "we must never",
+        ],
+        "weight": 1.2,
+    },
+    "blame_shifting": {
+        "description": "Deflecting responsibility to others",
+        "phrases": [
+            "the previous administration", "my predecessor", "they didn't",
+            "we inherited", "the other side", "our opponents",
+            "the media", "fake news", "the establishment", "the elites",
+            "special interests", "the system", "circumstances beyond",
+            "factors outside our control", "we were given",
+        ],
+        "weight": 1.4,
+    },
+    "future_faking": {
+        "description": "Vague promises without commitment",
+        "phrases": [
+            "we're looking into", "we're working on", "we're exploring",
+            "in the coming weeks", "in the near future", "very soon",
+            "stay tuned", "more to come", "we'll see", "we're committed to",
+            "we're dedicated to", "it's a priority", "on the agenda",
+            "under consideration", "being reviewed", "in due time",
+        ],
+        "weight": 1.2,
+    },
+    "tautology": {
+        "description": "Circular statements that say nothing",
+        "phrases": [
+            "it is what it is", "at the end of the day it's",
+            "the facts are the facts", "rules are rules", "fair is fair",
+            "business is business", "boys will be boys", "war is war",
+            "a deal is a deal", "enough is enough",
+        ],
+        "weight": 1.3,
+    },
+    "excessive_certainty": {
+        "description": "Overclaiming certainty on uncertain matters",
+        "phrases": [
+            "100 percent", "absolutely certain", "no question whatsoever",
+            "without any doubt", "guaranteed", "i can assure you",
+            "make no mistake", "let me be perfectly clear", "mark my words",
+            "you can count on", "i promise you", "believe me",
+            "trust me", "honestly", "truthfully", "frankly",
+            "to be honest", "to tell you the truth", "i swear",
+        ],
+        "weight": 1.3,
+        "note": "Ironically, over-emphasis on honesty often indicates the opposite",
+    },
+    "gaslighting": {
+        "description": "Making others question their reality",
+        "phrases": [
+            "that never happened", "you're misremembering", "that's not what i said",
+            "you're taking it out of context", "that's not what i meant",
+            "you're being too sensitive", "you're overreacting",
+            "i never said that", "you're confused", "that's ridiculous",
+            "that's absurd", "where did you hear that",
+        ],
+        "weight": 1.5,
+    },
+}
+
+# Politician-specific speech patterns
+POLITICIAN_PATTERNS = {
+    "talking_points": {
+        "description": "Rehearsed, scripted responses",
+        "indicators": [
+            "let me be clear", "make no mistake", "here's what i know",
+            "what the american people want", "my record shows",
+            "i have always believed", "throughout my career",
+            "i've always said", "as i've said before", "my position has always been",
+        ],
+    },
+    "pivot_phrases": {
+        "description": "Phrases used to change the subject",
+        "phrases": [
+            "what's really important is", "the real issue here is",
+            "what we should be talking about", "let me tell you what",
+            "but let's focus on", "the bigger picture is",
+            "what matters is", "the real question is",
+        ],
+    },
+    "empty_platitudes": {
+        "description": "Meaningless positive statements",
+        "phrases": [
+            "we're all in this together", "unity", "bringing people together",
+            "bipartisan solutions", "common ground", "reach across the aisle",
+            "work together", "find solutions", "move forward together",
+            "bright future", "better tomorrow", "american dream",
+        ],
+    },
+}
+
 INFLUENCE_PATTERNS = {
     "reciprocity": {
         "description": "Creating obligation through giving",

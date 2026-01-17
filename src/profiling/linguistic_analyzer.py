@@ -36,6 +36,8 @@ from .pattern_data import (
     VALUE_INDICATORS,
     INFLUENCE_PATTERNS,
     LINGUISTIC_STRESS_INDICATORS,
+    DECEPTION_PATTERNS,
+    POLITICIAN_PATTERNS,
 )
 
 
@@ -88,6 +90,11 @@ class AnalysisResult:
 
     # Filler word ratio
     filler_ratio: float = 0.0
+
+    # Deception/politician indicators
+    deception_score: float = 0.0  # 0.0 to 1.0
+    deception_markers: dict = field(default_factory=dict)
+    politician_score: float = 0.0  # 0.0 to 1.0 - "probably a politician" indicator
 
     # Raw match counts for debugging
     raw_matches: dict = field(default_factory=dict)
@@ -233,6 +240,12 @@ class LinguisticAnalyzer:
         result.influence_patterns = self._detect_influence_patterns(text_lower)
         result.stress_indicators = self._analyze_stress_indicators(text_lower)
         result.filler_ratio = self._calculate_filler_ratio(words)
+
+        # Deception and politician analysis
+        deception_result = self._analyze_deception(text_lower, words)
+        result.deception_score = deception_result["score"]
+        result.deception_markers = deception_result["markers"]
+        result.politician_score = deception_result["politician_score"]
 
         return result
 
@@ -627,3 +640,86 @@ class LinguisticAnalyzer:
 
         filler_count = sum(1 for w in words_lower if w in filler_words)
         return round(filler_count / len(words), 4)
+
+    def _analyze_deception(self, text_lower: str, words: list) -> dict:
+        """Analyze text for deception markers and politician-speak.
+
+        Returns dict with:
+            - score: Overall deception indicator (0.0-1.0)
+            - markers: Dict of detected deception categories and counts
+            - politician_score: How much like a politician they sound (0.0-1.0)
+
+        NOTE: This is NOT a lie detector. These are linguistic patterns that
+        MAY indicate evasion, spin, or rehearsed speech. Many honest people
+        use these patterns too. Use as one data point among many.
+        """
+        markers = {}
+        total_score = 0.0
+        total_weight = 0.0
+        word_count = len(words)
+
+        if word_count < 20:
+            return {"score": 0.0, "markers": {}, "politician_score": 0.0}
+
+        # Check each deception pattern category
+        for category, data in DECEPTION_PATTERNS.items():
+            category_count = 0
+            weight = data.get("weight", 1.0)
+
+            # Check phrases
+            for phrase in data.get("phrases", []):
+                if phrase in text_lower:
+                    category_count += 1
+
+            # Check keywords (with lower weight)
+            for keyword in data.get("keywords", []):
+                pattern = r'\b' + re.escape(keyword) + r'\b'
+                matches = len(re.findall(pattern, text_lower))
+                category_count += matches * 0.3
+
+            if category_count > 0:
+                markers[category] = {
+                    "count": round(category_count, 1),
+                    "description": data.get("description", ""),
+                }
+                # Normalize by word count
+                normalized = min(category_count / (word_count / 50), 1.0)
+                total_score += normalized * weight
+                total_weight += weight
+
+        # Calculate overall deception score
+        deception_score = 0.0
+        if total_weight > 0:
+            deception_score = min(total_score / total_weight, 1.0)
+
+        # Calculate politician score (additional patterns)
+        politician_count = 0
+        for category, data in POLITICIAN_PATTERNS.items():
+            phrases = data.get("phrases", data.get("indicators", []))
+            for phrase in phrases:
+                if phrase in text_lower:
+                    politician_count += 1
+
+        # Politician score based on both deception markers and politician-specific patterns
+        politician_base = min(politician_count / 3, 1.0)  # 3+ politician phrases = max
+
+        # High hedging + weasel words + non-answers = politician
+        politician_boost = 0.0
+        if "hedging" in markers and markers["hedging"]["count"] > 2:
+            politician_boost += 0.15
+        if "weasel_words" in markers and markers["weasel_words"]["count"] > 1:
+            politician_boost += 0.15
+        if "non_answers" in markers and markers["non_answers"]["count"] > 1:
+            politician_boost += 0.2
+        if "blame_shifting" in markers:
+            politician_boost += 0.15
+        if "future_faking" in markers:
+            politician_boost += 0.1
+
+        politician_score = min(politician_base + politician_boost + (deception_score * 0.3), 1.0)
+
+        return {
+            "score": round(deception_score, 3),
+            "markers": markers,
+            "politician_score": round(politician_score, 3),
+        }
