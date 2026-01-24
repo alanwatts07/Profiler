@@ -45,6 +45,7 @@ cp .env.example .env
    - Accept model licenses:
      - https://huggingface.co/pyannote/speaker-diarization-3.1
      - https://huggingface.co/pyannote/segmentation-3.0
+     - https://huggingface.co/pyannote/wespeaker-voxceleb-resnet34-LM
 
 2. **Anthropic API Key** (optional, for Claude analysis)
    - Get from: https://console.anthropic.com
