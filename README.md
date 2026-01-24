@@ -2,6 +2,13 @@
 
 Real-time audio profiling system that captures speech, identifies speakers, and analyzes linguistic patterns to build behavioral profiles.
 
+## Preview
+
+<p align="center">
+  <img src="preview.png" width="400" alt="Visual speaker profile with Claude analysis">
+  <img src="preview2.png" width="400" alt="Kinesthetic speaker profile with Claude analysis">
+</p>
+
 ## Features
 
 - **Real-time Audio Capture** - Capture system audio or microphone input

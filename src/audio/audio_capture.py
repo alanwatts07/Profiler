@@ -193,6 +193,21 @@ class AudioCapture:
 
         logger.info(f"Starting audio capture on device: {device}")
 
+        # If device is still None, use the default input device
+        if device is None:
+            default_devices = sd.query_devices()
+            default_input = sd.default.device[0]  # Default input device index
+            if default_input is not None and default_input >= 0:
+                device = default_input
+                logger.info(f"Using default input device: {device}")
+            else:
+                # Fall back to first available input device
+                for i, dev in enumerate(default_devices):
+                    if dev['max_input_channels'] > 0:
+                        device = i
+                        logger.info(f"Using first available input device: {device}")
+                        break
+
         # Query device info to get channel count and sample rate
         device_info = sd.query_devices(device)
         device_channels = int(device_info['max_input_channels'])
