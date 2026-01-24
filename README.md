@@ -106,19 +106,50 @@ python -m src.cli export session abc123 --format txt
 python -m src.cli dump
 ```
 
-## Windows Setup (System Audio)
+## Platform Support
 
-To capture system audio on Windows:
+| Platform | Status |
+|----------|--------|
+| Windows | Fully supported (recommended) |
+| Linux | Should work with PulseAudio/PipeWire |
+| WSL | Not supported (no audio device access) |
 
-1. **Option A: Stereo Mix**
-   - Right-click speaker icon → Sound Settings → Sound Control Panel
-   - Recording tab → Right-click → Show Disabled Devices
-   - Enable "Stereo Mix"
+## Windows Setup (Recommended)
 
-2. **Option B: VB-Audio/Voicemeeter** (Recommended)
-   - Install Voicemeeter: https://vb-audio.com/Voicemeeter/
-   - Route audio through Voicemeeter
-   - Use Voicemeeter Output as recording device
+The best way to capture ALL system audio (Discord, Zoom, YouTube, phone calls via browser, etc.) is with **Voicemeeter**:
+
+### Voicemeeter Setup (Recommended)
+
+1. **Install Voicemeeter**: https://vb-audio.com/Voicemeeter/
+
+2. **Set Windows audio output to Voicemeeter**:
+   - Right-click speaker icon → Sound Settings
+   - Set output device to "Voicemeeter Input (VB-Audio)"
+   - Now ALL system audio routes through Voicemeeter
+
+3. **Route Voicemeeter to your speakers/headphones**:
+   - Open Voicemeeter
+   - In Hardware Out (A1), select your actual speakers/headphones
+   - Make sure the strip is set to output to A1
+
+4. **Run the profiler**:
+   ```bash
+   python -m src.cli list-devices
+   # Find "Voicemeeter Output" device index
+   python -m src.cli overlay --device <index>
+   ```
+
+This captures everything: YouTube, Zoom, Discord, Facebook calls, browser audio, games - anything that plays through your system.
+
+### Alternative: Stereo Mix
+
+If you don't want Voicemeeter:
+- Right-click speaker icon → Sound Settings → Sound Control Panel
+- Recording tab → Right-click → Show Disabled Devices
+- Enable "Stereo Mix"
+- Use Stereo Mix device index with the profiler
+
+Note: Stereo Mix isn't available on all sound cards.
 
 ## Project Structure
 
